@@ -48,19 +48,22 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  // IMPORTANT: Use getUser() for security checks as it verifies the session with the server.
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (
-    request.nextUrl.pathname !== "/" &&
-    !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
-    !request.nextUrl.pathname.startsWith("/auth") &&
-    !request.nextUrl.pathname.startsWith("/debug")
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // 1. If accessing a protected route without a session, redirect to login IMMEDIATELY
+  if (request.nextUrl.pathname.startsWith("/protected") && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
+    // Keep the original destination to redirect back after login
+    url.searchParams.set("next", request.nextUrl.pathname); 
+    return NextResponse.redirect(url);
+  }
+
+  // 2. If already logged in and trying to access auth pages, redirect to dashboard
+  if (request.nextUrl.pathname.startsWith("/auth") && user && !request.nextUrl.pathname.includes("/confirm")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/protected/tickets";
     return NextResponse.redirect(url);
   }
 
