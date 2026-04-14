@@ -44,6 +44,46 @@ export async function getContactByEmail(email: string) {
   }
 }
 
+export async function getContactTickets(contactId: string) {
+  try {
+    const associations = await hubspotRequest(`/crm/v4/objects/contact/${contactId}/associations/ticket`);
+    const ticketIds = associations.results.map((res: any) => res.toObjectId);
+    if (ticketIds.length === 0) return [];
+
+    const tickets = await hubspotRequest(`/crm/v3/objects/tickets/batch/read`, {
+      method: "POST",
+      body: JSON.stringify({
+        inputs: ticketIds.map((id: string) => ({ id })),
+        properties: ["subject", "hs_pipeline_stage", "createdate", "portal_ticket_id"],
+      }),
+    });
+
+    return tickets.results;
+  } catch (error) {
+    console.error(`Error fetching tickets for contact ${contactId}:`, error);
+    return [];
+  }
+}
+
+export async function getTicketsByContactId(contactId: string) {
+  // 1. Get associations
+  const associations = await hubspotRequest(`/crm/v4/objects/contact/${contactId}/associations/ticket`);
+  const ticketIds = associations.results.map((a: any) => a.toObjectId);
+
+  if (ticketIds.length === 0) return [];
+
+  // 2. Fetch ticket details in batch
+  const tickets = await hubspotRequest(`/crm/v3/objects/tickets/batch/read`, {
+    method: 'POST',
+    body: JSON.stringify({
+      inputs: ticketIds.map((id: string) => ({ id })),
+      properties: ['subject', 'content', 'hs_ticket_priority', 'hs_ticket_category', 'hs_pipeline_stage', 'createdate', 'portal_ticket_id']
+    })
+  });
+
+  return tickets.results;
+}
+
 export async function createTicket(
   contactId: string, 
   { 
