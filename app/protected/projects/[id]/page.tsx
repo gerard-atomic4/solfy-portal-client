@@ -29,6 +29,14 @@ export default async function ProjectDetailPage({
 
   if (!deal) notFound();
 
+  // Temporary mapping logic for the type (ideally use a real HubSpot property if available)
+  const dealName = (deal.properties.dealname || "").toLowerCase();
+  const inferredType = dealName.includes("aerotermia") 
+    ? "Sistema de Aerotermia" 
+    : dealName.includes("cargador") || dealName.includes("carregador")
+    ? "Cargador de coche Eléctrico"
+    : "Sistema Fotovoltaico";
+
   return (
     <div className="flex-1 w-full flex flex-col gap-8 p-4 md:p-8">
       <div className="flex items-center gap-4">
@@ -41,7 +49,7 @@ export default async function ProjectDetailPage({
           </Badge>
           <h1 className="text-3xl font-black mt-1 tracking-tight">{deal.properties.dealname}</h1>
         </div>
-        <Link href={`/protected/tickets/new?dealId=${id}`}>
+        <Link href={`/protected/tickets/new?dealId=${id}&type=${encodeURIComponent(inferredType)}`}>
             <Button className="font-bold flex gap-2">
                 <Plus className="h-4 w-4" /> Nuevo Ticket
             </Button>
@@ -62,7 +70,7 @@ export default async function ProjectDetailPage({
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground flex items-center gap-2 font-bold uppercase text-[10px] tracking-widest"><Tag className="h-3 w-3" /> Tipo</span>
-                    <span className="font-medium">Instalación Fotovoltaica</span>
+                    <span className="font-medium">{inferredType}</span>
                 </div>
             </CardContent>
           </Card>

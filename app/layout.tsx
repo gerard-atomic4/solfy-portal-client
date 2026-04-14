@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: "Gestiona tus tickets de asistencia de Solfy",
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta-sans",
   display: "swap",
   subsets: ["latin"],
 });
@@ -26,7 +26,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${jakartaSans.className} antialiased font-medium`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

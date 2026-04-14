@@ -31,21 +31,21 @@ export function SignUpForm() {
 
   if (success) {
     return (
-      <div className="w-full flex-1 flex flex-col min-w-64 max-w-sm gap-4 text-center p-8 bg-card rounded-lg border shadow-sm">
-        <h1 className="text-2xl font-bold text-primary">¡Enlace enviado!</h1>
-        <p className="text-sm text-muted-foreground leading-relaxed">
+      <div className="w-full flex-1 flex flex-col min-w-64 max-w-sm gap-4 text-center p-10 bg-card rounded-3xl border shadow-2xl shadow-primary/5">
+        <h1 className="text-3xl font-black text-primary tracking-tighter">¡Enlace enviado!</h1>
+        <p className="text-muted-foreground leading-relaxed font-medium">
           Hemos enviado un enlace de acceso a tu correo electrónico. 
-          Haz clic en él para entrar y crear tu contraseña.
+          Haz clic en él para entrar y gestionar tu cuenta.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col min-w-64 max-w-sm mx-auto p-8 bg-card rounded-lg border shadow-sm">
-      <h1 className="text-2xl font-bold">Registro de Cliente</h1>
-      <p className="text-sm text-muted-foreground mt-2">
-        Ingresa tu email para recibir el enlace de acceso.
+    <form onSubmit={handleSubmit} className="flex flex-col min-w-64 max-w-sm mx-auto p-10 bg-card rounded-3xl border shadow-2xl shadow-primary/5">
+      <h1 className="text-3xl font-black tracking-tighter text-foreground">Registro<span className="text-primary">.</span></h1>
+      <p className="text-sm text-muted-foreground mt-1 font-medium italic">
+        Ingresa tu email para recibir el acceso instantáneo.
       </p>
       <div className="flex flex-col gap-4 mt-8">
         <div className="space-y-2">

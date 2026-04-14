@@ -53,12 +53,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
               <Link href="/protected" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-                  <span className="font-black text-lg">S</span>
+                <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#60c6ea] to-[#8cd1c6] text-white shadow-lg shadow-primary/20">
+                  <span className="font-black text-xl tracking-tighter">S</span>
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight transition-all group-data-[collapsible=icon]:opacity-0">
-                  <span className="truncate font-black text-lg leading-none">Solfy Portal</span>
-                  <span className="truncate text-[10px] text-muted-foreground uppercase font-black tracking-widest mt-1">Client Area</span>
+                <div className="grid flex-1 text-left leading-tight transition-all group-data-[collapsible=icon]:opacity-0">
+                  <span className="truncate font-black text-xl tracking-tight">Solfy<span className="text-primary">.</span></span>
+                  <span className="truncate text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] mt-0.5">Portal Clientes</span>
                 </div>
               </Link>
             </SidebarMenuButton>

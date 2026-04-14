@@ -49,11 +49,11 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="rounded-3xl border shadow-2xl shadow-primary/5 p-4">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
+          <CardTitle className="text-3xl font-black tracking-tighter">Login<span className="text-primary">.</span></CardTitle>
+          <CardDescription className="font-medium italic">
+            Introduce tus credenciales para acceder a tu área de cliente
           </CardDescription>
         </CardHeader>
         <CardContent>
