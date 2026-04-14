@@ -400,7 +400,7 @@ export async function getDealTickets(dealId: string) {
       method: "POST",
       body: JSON.stringify({
         inputs: ticketIds.map((id: string) => ({ id })),
-        properties: ["subject", "hs_pipeline_stage", "hs_ticket_priority", "createdate", "portal_ticket_id"],
+        properties: ["subject", "content", "hs_ticket_priority", "hs_ticket_category", "hs_pipeline_stage", "createdate", "portal_ticket_id"],
       }),
     });
 
