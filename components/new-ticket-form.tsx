@@ -11,44 +11,49 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Paperclip, X, AlertCircle, CheckCircle2, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type OptionItem = {
+  label: string;
+  value: string;
+};
+
 // Mapping of types to their respective subcategories from user's HTML
 const INCIDENT_CATEGORIES = {
   "Sistema Fotovoltaico": [
-    "Conexión sistema de monitorización",
-    "Datos o lectura errónea del sistema",
-    "Fallas técnicas en el sistema fotovoltaico",
-    "Fallas técnicas en la batería",
-    "Incidencias estructurales/estéticos post-obra",
-    "Quejas de producción / Incoherencia factura de luz",
-    "Permisos de accesos",
-    "Otros",
-    "Retraso instalación"
+    { label: "Conexión sistema de monitorización", value: "Conexión sistema de monitorización" },
+    { label: "Datos o lectura errónea del sistema", value: "Datos o lectura errónea del sistema" },
+    { label: "Fallas técnicas en el sistema fotovoltaico", value: "Fallas técnicas en el sistema fotovoltaico" },
+    { label: "Fallas técnicas en la batería", value: "Fallas técnicas en la batería" },
+    { label: "Incidencias estructurales/estéticos post-obra", value: "Incidencias estructurales/estéticos post-obra" },
+    { label: "Quejas de producción / Incoherencia factura de luz", value: "Quejas de producción / Incoherencia factura de luz" },
+    { label: "Permisos de accesos", value: "Permisos de accesos" },
+    { label: "Otros", value: "Otros" },
+    { label: "Retraso instalación", value: "Retraso instalación" },
   ],
   "Sistema de Aerotermia": [
-    "Fugas / Fallos eléctricos",
-    "ACS",
-    "Error en equipos",
-    "Retraso instalación",
-    "Problemas con enfriamiento/calefacción",
-    "Estética",
-    "Quejas de producción / Incoherencia factura de luz",
-    "Permisos de accesos",
-    "Otros"
+    { label: "Fugas / Fallos eléctricos", value: "Fugas / Fallos eléctricos" },
+    { label: "ACS", value: "ACS" },
+    { label: "Error en equipos", value: "Error en equipos" },
+    { label: "Retraso instalación", value: "Retraso instalación" },
+    { label: "Problemas con enfriamiento/calefacción", value: "Sensación Confort" },
+    { label: "Estética", value: "Estética" },
+    { label: "Quejas de producción / Incoherencia factura de luz", value: "Quejas de producción / Incoherencia factura de luz" },
+    { label: "Permisos de accesos", value: "Permisos de accesos" },
+    { label: "Otros", value: "Otros" },
   ],
   "Cargador de coche Eléctrico": [
-    "Mal funcionamiento de cargador",
-    "Retraso instalación",
-    "Otros"
+    { label: "Mal funcionamiento de cargador", value: "Mal funcionamiento de cargador" },
+    { label: "Retraso instalación", value: "Retraso instalación" },
+    { label: "Otros", value: "Otros" },
   ]
 } as const;
 
-const DOCUMENTATION_CATEGORIES = [
-  "IBI/Requerimientos",
-  "Legalizaciones",
-  "Permisos municipales/requerimientos/pagos",
-  "Certificados energéticos",
-  "Gestión subvenciones",
-  "Otros"
+const DOCUMENTATION_CATEGORIES: OptionItem[] = [
+  { label: "IBI/Requerimientos", value: "IBI/Req" },
+  { label: "Legalizaciones", value: "Legalizaciones" },
+  { label: "Permisos municipales/requerimientos/pagos", value: "Permisos/req/pagos" },
+  { label: "Certificados energéticos", value: "Certificados energéticos" },
+  { label: "Gestión subvenciones", value: "Gestión subvenciones" },
+  { label: "Otros", value: "Otros" },
 ];
 
 type InstallationType = keyof typeof INCIDENT_CATEGORIES;
@@ -95,6 +100,9 @@ export function NewTicketForm({
     if (!installationType) return [];
     return INCIDENT_CATEGORIES[installationType as InstallationType] || [];
   }, [installationType]);
+
+  const selectedSubCategoryOption = currentSubCategories.find((option) => option.value === subCategory);
+  const selectedDocCategoryOption = DOCUMENTATION_CATEGORIES.find((option) => option.value === docCategory);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -149,9 +157,9 @@ export function NewTicketForm({
     // Subject calculation
     let subject = "";
     if (formCategory === "asistencia") {
-      subject = `${installationType}: ${subCategory}`;
+      subject = `${installationType}: ${selectedSubCategoryOption?.label || subCategory}`;
     } else {
-      subject = `${docCategory}`;
+      subject = `${selectedDocCategoryOption?.label || docCategory}`;
       // Also pass the doc category to the form data so the server action can process it if needed
       formData.append("TICKET.tipologia_tramites", docCategory);
     }
@@ -233,8 +241,8 @@ export function NewTicketForm({
                       <SelectValue placeholder={installationType ? "Selecciona..." : "Primero elige sistema"} className="truncate" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl max-h-[300px] w-[var(--radix-select-trigger-width)] max-w-[var(--radix-select-trigger-width)]">
-                      {currentSubCategories.map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      {currentSubCategories.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -252,8 +260,8 @@ export function NewTicketForm({
                     <SelectValue placeholder="Indícanos la tipología de consulta" className="truncate" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl w-[var(--radix-select-trigger-width)] max-w-[var(--radix-select-trigger-width)]">
-                    {DOCUMENTATION_CATEGORIES.map(cat => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    {DOCUMENTATION_CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
